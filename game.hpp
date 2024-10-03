@@ -11,6 +11,9 @@ class CGame{
     sf::Font m_font;
     sf::Text m_debugText;
     std::string m_debugString;
+    sf::View m_renderView;
+    sf::Texture m_blockTexture;
+    sf::Sprite m_blockSprite;
     int m_fps;
 
     private:

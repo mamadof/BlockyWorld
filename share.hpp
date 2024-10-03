@@ -3,17 +3,11 @@
 //standar libraries
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
-#include <SFML/Audio.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <cstdlib>
 #include <string>
 #include <iostream>
-#include <map>
-#include <vector>
-#include <climits>
-#include <typeinfo>
-#include <memory>
 //user libraries
 #include "game.hpp"
 #include "input.hpp"

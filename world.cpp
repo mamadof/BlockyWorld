@@ -4,10 +4,6 @@
 void CWorld::tick()
 {
     mp_player->tick();
-    // for (int i = 0; i < m_numberOfEntities;i++)
-    // {
-    //     mpa_entities[i]->tick();
-    // }
 }
 
 CWorld::CWorld()

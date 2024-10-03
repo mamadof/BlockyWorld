@@ -64,9 +64,9 @@ class CPlayer : public CEntity{
 class CBlock : public CEntity{
     public:
     enum Type{
+        GLASS,
         GRASS,
         STONE,
-        GLASS,
         TYPE_COUNT
     };
     CBlock(int x, int y, bool ghost = false);

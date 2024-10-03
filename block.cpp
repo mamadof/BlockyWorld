@@ -3,15 +3,13 @@
 CBlock::CBlock(int x, int y, bool ghost)
 {
     m_body.setSize(sf::Vector2f(GRID_SIZE,GRID_SIZE));
-    m_body.setFillColor(sf::Color::Blue);
+    // m_body.setFillColor(sf::Color::);
     m_body.setPosition(x, y);
+    m_x = x;
+    m_y = y;
+    m_ghost = ghost;
 }
 
-CBlock* CWorld::BlockByPos(int x, int y)
-{
-    CBlock* pblock = blockByArray(x/GRID_SIZE,y/GRID_SIZE);
-    return pblock;
-}
 
 bool CWorld::distroyBlock(int x, int y)
 {
@@ -36,6 +34,14 @@ CBlock* CWorld::createBlock(int x, int y, bool ghost)
 
 CBlock* CWorld::blockByArray(int x, int y)
 {
+    if (x > MAX_BLOCKS || x < 0 || y > MAX_BLOCKS || y < 0)return NULL;
     CBlock* pblock = mpa_blocks[x][y];
+    return pblock;
+}
+
+CBlock* CWorld::BlockByPos(int x, int y)
+{
+    if (x > (MAX_BLOCKS*GRID_SIZE)-1 || x < 0 || y > (MAX_BLOCKS*GRID_SIZE)-1 || y < 0)return NULL;
+    CBlock* pblock = blockByArray(x/GRID_SIZE,y/GRID_SIZE);
     return pblock;
 }

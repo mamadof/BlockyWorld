@@ -5,6 +5,7 @@
 namespace Input{
     enum KeyState{
         NONE,
+        DOWN,
         PRESSED,
         RELEASED,
         STATE_COUNT
