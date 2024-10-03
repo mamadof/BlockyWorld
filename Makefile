@@ -1,2 +1,2 @@
 all:
-	g++ main.cpp player.cpp game.cpp gameWorld.cpp input.cpp -o out -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
+	g++ main.cpp game.cpp world.cpp input.cpp block.cpp player.cpp entity.cpp -o out -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network

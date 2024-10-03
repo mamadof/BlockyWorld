@@ -12,6 +12,8 @@
 #include <map>
 #include <vector>
 #include <climits>
+#include <typeinfo>
+#include <memory>
 //user libraries
 #include "game.hpp"
 #include "input.hpp"
@@ -21,9 +23,10 @@ extern sf::RenderWindow sf_window;
 extern sf::Event sf_event;
 extern class CGame *pgame;
 extern class CWorld *pworld;
-extern class CPlayer *pplayer;
 
 #define WINDOW_WIDTH 900
 #define WINDOW_HEIGHT 600
+
+#define GRID_SIZE 50
 
 #endif //SHARE_HPP

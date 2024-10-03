@@ -1,6 +1,6 @@
 #include "share.hpp"
-#include "player.hpp"
 
+extern CGame* pgame;
 
 int main(int argc, char** argv)
 {
