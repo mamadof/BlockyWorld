@@ -1,12 +1,10 @@
 #include "share.hpp"
 
-CBlock::CBlock(int x, int y, bool ghost)
+CBlock::CBlock(sf::Vector2f pos, bool ghost)
 {
+    m_pos = pos;
     m_body.setSize(sf::Vector2f(GRID_SIZE,GRID_SIZE));
-    // m_body.setFillColor(sf::Color::);
-    m_body.setPosition(x, y);
-    m_x = x;
-    m_y = y;
+    m_body.setPosition(pos);
     m_ghost = ghost;
 }
 
@@ -27,7 +25,7 @@ CBlock* CWorld::createBlock(int x, int y, bool ghost)
     if (BlockByPos(x, y) != NULL)return NULL;
     if (x > (MAX_BLOCKS*GRID_SIZE)-1 || y > (MAX_BLOCKS*GRID_SIZE)-1
     || x < 0 || y < 0)return NULL;
-    CBlock* pblock = new CBlock(snapToGrid(x,y).x, snapToGrid(x,y).y);
+    CBlock* pblock = new CBlock(sf::Vector2f(snapToGrid(x,y)));
     pworld->mpa_blocks[x/GRID_SIZE][y/GRID_SIZE] = pblock;
     return pblock;
 }
@@ -44,4 +42,9 @@ CBlock* CWorld::BlockByPos(int x, int y)
     if (x > (MAX_BLOCKS*GRID_SIZE)-1 || x < 0 || y > (MAX_BLOCKS*GRID_SIZE)-1 || y < 0)return NULL;
     CBlock* pblock = blockByArray(x/GRID_SIZE,y/GRID_SIZE);
     return pblock;
+}
+
+CBlock* CWorld::BlockByPos(sf::Vector2f const &pos)
+{
+    return BlockByPos(pos.x, pos.y);
 }

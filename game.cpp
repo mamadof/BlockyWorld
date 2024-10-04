@@ -70,13 +70,19 @@ void CGame::init()
     m_blockTexture.loadFromFile("data/images/blocks.png");
     m_blockSprite.setTexture(m_blockTexture);
     m_blockSprite.setTextureRect(sf::IntRect(0,0,GRID_SIZE,GRID_SIZE));
+
     //cover the world with blocks
     // for (int x = 0; x < MAX_BLOCKS; x++)
-    //     for (int y = 0; y < MAX_BLOCKS; y++)
-    //     {
-    //         pworld->createBlock(x*GRID_SIZE, y*GRID_SIZE);
-    //     }
-
+    // for (int y = 0; y < MAX_BLOCKS; y++)
+    // {
+    //     pworld->createBlock(x*GRID_SIZE, y*GRID_SIZE);
+    // }
+    
+    //make a platform for testing
+    for (int x = 0; x < 30; x++)
+    {
+        pworld->createBlock(x*GRID_SIZE, 6*GRID_SIZE);
+    }
 }
 
 void CGame::tick()
@@ -93,12 +99,15 @@ void CGame::tick()
     m_debugString.append(buff);
     sprintf(buff, "m_mousePosWorld:%d, %d\n", m_mousePosWorld.x, m_mousePosWorld.y);
     m_debugString.append(buff);
+    // sf::Vector2f v2f = sf::Vector2f(0,0);
+    // sprintf(buff, "distance:%f\n", gm::v2distance(v2f, sf::Vector2f(m_mousePosWorld)));
+    // m_debugString.append(buff);
 
     CBlock* pblock = pworld->BlockByPos(m_mousePosWorld.x, m_mousePosWorld.y);
     if(pblock != NULL)
     {
-        sprintf(buff, "ID:%lu    ghost:%u     pos:%li %li\n",
-        pblock->m_ID, pblock->m_ghost, pblock->m_x, pblock->m_y);
+        sprintf(buff, "ID:%lu    ghost:%u     pos:%.0f %.0f\n",
+        pblock->m_ID, pblock->m_ghost, pblock->m_pos.x, pblock->m_pos.y);
         m_debugString.append(buff);
     }
 

@@ -8,10 +8,12 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+
 //user libraries
 #include "game.hpp"
 #include "input.hpp"
 #include "gameWorld.hpp"
+#include "math.hpp"
 
 extern sf::RenderWindow sf_window;
 extern sf::Event sf_event;
