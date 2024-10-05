@@ -31,6 +31,8 @@ void CPlayer::tick()
     gm::v2addref(m_pos, m_velocity);
     m_body.setPosition(m_pos);
     m_view.setCenter(m_pos);
+    m_prepos = m_pos;
+    m_preVelocity = m_velocity;
     
     //block creation
     if(Input::getGameKeyState(Input::RMB))
@@ -41,7 +43,6 @@ void CPlayer::tick()
     {
         pworld->distroyBlock(pgame->m_mousePosWorld.x, pgame->m_mousePosWorld.y);
     }
-    m_preVelocity = m_velocity;
 }
 
 void CWorld::setPlayer(CPlayer* pplayer)

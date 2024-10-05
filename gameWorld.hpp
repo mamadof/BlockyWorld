@@ -63,6 +63,7 @@ class CPlayer : public CEntity{
     bool m_rubbing;//is player rubbing against any surface ?
     sf::Vector2f m_preVelocity;//velocity that player had in previous tick
     sf::Vector2f m_velocity;//velocity that programmer control for further movement controll
+    sf::Vector2f m_prepos;
     sf::View m_view;
     sf::RectangleShape m_body;
 
@@ -73,9 +74,10 @@ class CPlayer : public CEntity{
 class CBlock : public CEntity{
     public:
     enum Type{
-        GLASS,
+        DIRT,
         GRASS,
         STONE,
+        GLASS,
         TYPE_COUNT
     };
     CBlock(sf::Vector2f pos, bool ghost = false);

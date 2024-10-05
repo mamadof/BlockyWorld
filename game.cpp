@@ -67,9 +67,16 @@ void CGame::init()
     blockShadow.setSize(sf::Vector2f(GRID_SIZE,GRID_SIZE));
     blockShadow.setFillColor(sf::Color(0,0,60,30));
     //texture
-    m_blockTexture.loadFromFile("data/images/blocks.png");
-    m_blockSprite.setTexture(m_blockTexture);
-    m_blockSprite.setTextureRect(sf::IntRect(0,0,GRID_SIZE,GRID_SIZE));
+    m_aTextures[BLOCK_TEXTURE].loadFromFile("data/images/blocks.png");
+    m_aTextures[PLAYER_TEXTURE].loadFromFile("data/images/player.png");
+
+    m_aSprites[BLOCK_TEXTURE].setTexture(m_aTextures[BLOCK_TEXTURE]);
+    m_aSprites[BLOCK_TEXTURE].setTextureRect(sf::IntRect(0,0,GRID_SIZE,GRID_SIZE));
+    m_aSprites[BLOCK_TEXTURE].setColor(sf::Color(100,100,255,255));
+
+    m_aSprites[PLAYER_TEXTURE].setTexture(m_aTextures[PLAYER_TEXTURE]);
+    m_aSprites[PLAYER_TEXTURE].setTextureRect(sf::IntRect(0,0,GRID_SIZE+20,GRID_SIZE*2+20));
+    m_aSprites[PLAYER_TEXTURE].setOrigin(sf::Vector2f(10,10));
 
     //cover the world with blocks
     // for (int x = 0; x < MAX_BLOCKS; x++)
@@ -119,11 +126,13 @@ void CGame::tick()
 
 void CGame::render()
 {
-    sf_window.clear(sf::Color::White);
+    sf_window.clear(sf::Color(100,100,200,0));
     //draw border
     sf_window.draw(m_border);
     //draw player
     sf_window.draw(pplayer->m_body);
+    m_aSprites[PLAYER_TEXTURE].setPosition(pplayer->m_pos);
+    sf_window.draw(m_aSprites[PLAYER_TEXTURE]);
     //draw blocks
     CBlock* pblock;
     for (int x = 0; x < MAX_BLOCKS; x++)
@@ -133,8 +142,8 @@ void CGame::render()
             pblock = pworld->blockByArray(x, y);
             if (pblock == NULL)continue;
             sf_window.draw(pblock->m_body);
-            m_blockSprite.setPosition(pblock->m_body.getPosition());
-            sf_window.draw(m_blockSprite);
+            m_aSprites[BLOCK_TEXTURE].setPosition(pblock->m_body.getPosition());
+            sf_window.draw(m_aSprites[BLOCK_TEXTURE]);
         }
     }
     //block shadow

@@ -8,8 +8,8 @@ CWorld::CWorld()
     m_numberOfMobs = 0;
     m_numberOfItems = 0;
     m_blockFriction = 0.8;
-    m_airFriction = 0.9;
-    //init blocks to NULL
+    m_airFriction = 0.92;
+    //init all blocks to NULL
     for (int x = 0; x < MAX_BLOCKS; x++)
     {
         for (int y = 0; y < MAX_BLOCKS; y++)
@@ -37,8 +37,11 @@ void CWorld::CalColVel(sf::Vector2f &pos, sf::Vector2f &velocity, sf::RectangleS
     {
         if(BlockByPos(gm::v2add(recPoints[i], velocity)) != NULL)
         {
-            velocity.x = 0;
             velocity.y = 0;
+        }
+        if(BlockByPos(gm::v2add(recPoints[i], velocity)) != NULL)
+        {
+            velocity.x = 0;
         }
     }
     // printf("size of array:%d\n", );

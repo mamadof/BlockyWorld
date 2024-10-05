@@ -9,7 +9,7 @@ namespace gm{ //stands for game math
         return sqrt(pow(v2.x - v1.x,2) + pow(v2.y - v1.y,2));
     }
 
-    inline void v2addref(sf::Vector2f &v1, sf::Vector2f v2)
+    inline void v2addref(sf::Vector2f &v1, sf::Vector2f &v2)
     {
         v1.x += v2.x;
         v1.y += v2.y;

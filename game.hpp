@@ -4,6 +4,11 @@
 
 class CGame{
     public:
+    enum Textures{
+        BLOCK_TEXTURE,
+        PLAYER_TEXTURE,
+        TEXTURE_COUNT
+    };
     void run();
     sf::Vector2i m_mousePos;
     sf::Vector2i m_mousePosWorld;
@@ -12,8 +17,8 @@ class CGame{
     sf::Text m_debugText;
     std::string m_debugString;
     sf::View m_renderView;
-    sf::Texture m_blockTexture;
-    sf::Sprite m_blockSprite;
+    sf::Texture m_aTextures[TEXTURE_COUNT];
+    sf::Sprite m_aSprites[TEXTURE_COUNT];
     int m_fps;
 
     private:
