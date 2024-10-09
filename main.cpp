@@ -1,11 +1,11 @@
 #include "share.hpp"
+#include "game.hpp"
 
 extern CGame* pgame;
 
 int main(int argc, char** argv)
 {
-    CGame game;
-    pgame = &game;
+    pgame = new CGame;
     pgame->run();
     return EXIT_SUCCESS;
 }

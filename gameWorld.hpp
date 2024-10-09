@@ -1,57 +1,45 @@
 #ifndef GAMEWORLD_HPP
 #define GAMEWORLD_HPP
 #include <SFML/Graphics.hpp>
+#include "share.hpp"
 
-enum EntityType{
-    BLOCK,
-    PLAYER,
-    MOB,
-    ITEM,
-    TYPE_COUNT
-};
+using gt::block::Block_Type;
 
-#define MAX_ENTITIES 1000
-#define MAX_BLOCKS 100
-
-class CWorld{
-    public:
-    CWorld();
-    void tick();
-    unsigned long m_numberOfEntities;
-    unsigned long m_numberOfBlocks;
-    unsigned long m_numberOfMobs;
-    unsigned long m_numberOfItems;
-    float m_blockFriction;
-    float m_airFriction;
-    class CPlayer* player();//get the player pointer
-    class CBlock* blockByArray(int x, int y);//block in the array
-    class CBlock* BlockByPos(int x, int y);//block in the cordinate
-    class CBlock* BlockByPos(sf::Vector2f const &pos);
-    class CBlock* createBlock(int x, int y, bool ghost = false);//create block on that cordinate
-    bool distroyBlock(int x, int y);//create block on that cordinate
-    void setPlayer(CPlayer* pplayer);
-    //stands for calculate collision with velocity
-    void CalColVel(sf::Vector2f &pos, sf::Vector2f &velocity, sf::RectangleShape &body);
-
-    private:
-    unsigned long m_width;
-    unsigned long m_height;
-    class CPlayer* mp_player;
-    class CEntity* mpa_mobs[MAX_ENTITIES];
-    class CEntity* mpa_items[MAX_ENTITIES];
-    class CBlock* mpa_blocks[MAX_BLOCKS][MAX_BLOCKS];
-    
-};
+/*small blocks ingredients:
+electron, neutron, proton*/
+typedef struct{
+    unsigned m_e;
+    unsigned m_n;
+    unsigned m_p;
+}Particles;
 
 class CEntity{
     public:
-    sf::Vector2f m_pos;
-    bool m_shown;
-    bool m_ghost;
-    bool m_movable;
-    unsigned long m_ID;
-    CEntity();
+    unsigned long m_UID;//unique ID
+    sf::RectangleShape m_body;
+};
+
+class CSmallBlock : public CEntity{
+    public:
+    bool m_deleted;
+    CSmallBlock();
+    gt::block::Block_Type m_type;//small blocks can't have mixed type
+    Particles m_particles;
+    unsigned m_HP;
+    unsigned m_maxHP;
     void tick();
+    private:
+};
+
+class CBlock : public CEntity{
+    public:
+    bool m_deleted;
+    Block_Type m_type;
+    CSmallBlock ma_SmallBlocks[BLOCK_SUBDIVISION][BLOCK_SUBDIVISION];
+    unsigned m_HP;
+    unsigned m_maxHP;
+    void tick();
+    private:
 };
 
 class CPlayer : public CEntity{
@@ -61,31 +49,57 @@ class CPlayer : public CEntity{
     bool m_grounded;//feet on the ground
     bool m_flying;
     bool m_rubbing;//is player rubbing against any surface ?
-    sf::Vector2f m_preVelocity;//velocity that player had in previous tick
     sf::Vector2f m_velocity;//velocity that programmer control for further movement controll
-    sf::Vector2f m_prepos;
     sf::View m_view;
-    sf::RectangleShape m_body;
-
     CPlayer();
     void tick();
 };
 
-class CBlock : public CEntity{
+class CCell{
+
     public:
-    enum Type{
-        DIRT,
-        GRASS,
-        STONE,
-        GLASS,
-        TYPE_COUNT
-    };
-    CBlock(sf::Vector2f pos, bool ghost = false);
-    unsigned m_HP;
-    unsigned m_maxHP;
-    sf::RectangleShape m_body;
+    CCell();
+    sf::RectangleShape m_body;//rectangular body
+    CBlock m_BlockContent;
     void tick();
     private:
+};
+
+class CWorld{
+    private:
+    
+    public:
+    CWorld(unsigned long width, unsigned long height);
+    void tick();
+    unsigned long m_width;//world width
+    unsigned long m_height;//world height
+    unsigned long m_numberOfEntities;
+    unsigned long m_numberOfBlocks;
+    unsigned long m_numberOfSmallBlocks;
+    unsigned long m_numberOfMobs;
+    unsigned long m_numberOfItems;
+    sf::Vector2f m_groundFriction;
+    sf::Vector2f m_airFriction;
+    sf::RectangleShape m_border;
+    CCell* getCellInArray(int x, int y);
+    CCell* getCell(sf::Vector2f &pos);
+    CCell* getCell(sf::Vector2f pos);
+    CCell* getCell(int x, int y);
+    CBlock* createBlock(int x, int y, Block_Type type, bool force = false);
+    CSmallBlock* createSmallBlock(int x, int y, Block_Type type, bool force = false);
+    bool distroyBlock(int x, int y);
+    bool distroySmallBlock(int x, int y);
+    //get pointer to player
+    CPlayer* player()const;
+    //don't use this
+    void setPlayer(CPlayer* pplayer);
+    //calculate player's next move
+    void CalculateNextPos(sf::Vector2f &velocity, sf::RectangleShape &body);
+
+    private:
+    CPlayer* m_pPlayer;
+    /*position of every cell in the world*/
+    CCell* ma_pCells;
 };
 
 #endif //GAMEWORLD_HPP

@@ -18,6 +18,8 @@ namespace Input{
         D,
         W,
         S,
+        ZOOM_IN,
+        ZOOM_OUT,
         KEYS_COUNT
     };
 

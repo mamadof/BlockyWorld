@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include "share.hpp"
 #include <math.h>
 
 using namespace std;
@@ -34,9 +35,43 @@ namespace gm{ //stands for game math
         v.x *= scale;
         v.y *= scale;
     }
+    inline void v2v2scaleref(sf::Vector2f &v1, sf::Vector2f &v2)
+    {
+        v1.x *= v2.x;
+        v1.y *= v2.y;
+    }
     inline void zero(sf::Vector2f &v)
     {
         v.x = 0;
         v.y = 0;
+    }
+    inline bool Collision_AABB(
+    sf::RectangleShape &body1,
+    sf::RectangleShape &body2,
+    sf::Vector2f       &velocity)
+    {
+        
+    }
+    inline bool Collision_AABB(
+    sf::RectangleShape &body1,
+    sf::RectangleShape &body2)
+    {
+        
+    }
+    inline bool Collision_SAT(sf::RectangleShape &body1, sf::RectangleShape &body2)
+    {
+
+    }
+    inline sf::Vector2i snapToGrid(int x, int y)
+    {
+        return sf::Vector2i(((int)x / GRID_SIZE)*GRID_SIZE,((int)y / GRID_SIZE)*GRID_SIZE);
+    }
+    inline sf::Vector2i snapToGrid(sf::Vector2i vec2i)
+    {
+        return snapToGrid(vec2i.x, vec2i.y);
+    }
+    inline sf::Vector2i snapToGrid(sf::Vector2f vec2f)
+    {
+        return snapToGrid(vec2f.x, vec2f.y);
     }
 }
