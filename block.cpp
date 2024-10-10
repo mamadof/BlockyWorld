@@ -16,7 +16,7 @@ CCell* CWorld::getCellInArray(int x, int y)
 }
 CSmallBlock::CSmallBlock()
 {
-    this->m_body.setSize(sf::Vector2f((float)SMALL_BLOCK_SIZE,(float)SMALL_BLOCK_SIZE));
+
 }
 CCell::CCell()
 {
@@ -35,7 +35,7 @@ CCell* CWorld::getCell(sf::Vector2f pos)
     return getCell((int)pos.x, (int)pos.y);
 }
 
-CBlock* CWorld::createBlock(int x, int y, Block_Type type, bool force)
+CBlock* CWorld::createBlock(int x, int y, Ginfo::Block::Type type, bool force)
 {
     //check the cell
     CCell* pCell = getCell(x,y);
@@ -45,7 +45,7 @@ CBlock* CWorld::createBlock(int x, int y, Block_Type type, bool force)
     pBlock->m_deleted = false;
     pBlock->m_type = type;
     //allocate memory for small blocks
-    if (type != gt::block::MIXED)
+    if (type != Ginfo::Block::MIXED)
     {
         for (int x = 0; x < BLOCK_SUBDIVISION; x++)
         {
@@ -53,17 +53,17 @@ CBlock* CWorld::createBlock(int x, int y, Block_Type type, bool force)
             {
                 pBlock->ma_SmallBlocks[x][y].m_deleted = false;
                 pBlock->ma_SmallBlocks[x][y].m_type = type;
-                pBlock->ma_SmallBlocks[x][y].m_body.
-                setPosition(sf::Vector2f(
-                pBlock->m_body.getPosition().x + ((float)x*SMALL_BLOCK_SIZE),
-                pBlock->m_body.getPosition().y + ((float)y*SMALL_BLOCK_SIZE)));
+                pBlock->ma_SmallBlocks[x][y].m_pos =
+                sf::Vector2f(
+                pBlock->m_pos.x + ((float)x*SMALL_BLOCK_SIZE),
+                pBlock->m_pos.y + ((float)y*SMALL_BLOCK_SIZE));
             }
         }
     }
     return pBlock;
 }
 
-CSmallBlock* CWorld::createSmallBlock(int x, int y, Block_Type type, bool force)
+CSmallBlock* CWorld::createSmallBlock(int x, int y, Ginfo::Block::Type type, bool force)
 {
 
 }

@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "share.hpp"
+#include "info.hpp"
 #include <math.h>
 
 using namespace std;

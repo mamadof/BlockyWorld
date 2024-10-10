@@ -28,13 +28,9 @@ CWorld::CWorld(unsigned long width, unsigned long height)
         for (int y = 0; y < height; y++)
         {
             pCell = &ma_pCells[(x*height)+y];
-            pCell->m_body.setSize(sf::Vector2f(CELL_SIZE,CELL_SIZE));
-            pCell->m_body.setPosition(sf::Vector2f(x * CELL_SIZE, y * CELL_SIZE));
-            pCell->m_body.setFillColor(sf::Color(0,255,50,80));
             pCell->m_BlockContent.m_deleted = true;
-            pCell->m_BlockContent.m_body.
-            setSize(sf::Vector2f(BLOCK_SIZE,BLOCK_SIZE));
-            pCell->m_BlockContent.m_body.setPosition(x * BLOCK_SIZE, y * BLOCK_SIZE);
+            pCell->m_pos = sf::Vector2f(x * BLOCK_SIZE, y * BLOCK_SIZE);
+            pCell->m_BlockContent.m_pos = sf::Vector2f(x * BLOCK_SIZE, y * BLOCK_SIZE);
             //iterate through small blocks (9*9 pieces)
             for (int x = 0; x < BLOCK_SUBDIVISION; x++)
             {
@@ -44,12 +40,8 @@ CWorld::CWorld(unsigned long width, unsigned long height)
                     ma_SmallBlocks[x][y].m_deleted = true;
 
                     pCell->m_BlockContent.
-                    ma_SmallBlocks[x][y].m_body.
-                    setSize(sf::Vector2f((float)SMALL_BLOCK_SIZE,(float)SMALL_BLOCK_SIZE));
-
-                    pCell->m_BlockContent.
-                    ma_SmallBlocks[x][y].m_body.
-                    setPosition(sf::Vector2f((float)x*SMALL_BLOCK_SIZE,(float)y*SMALL_BLOCK_SIZE));
+                    ma_SmallBlocks[x][y].m_pos =
+                    sf::Vector2f((float)x*SMALL_BLOCK_SIZE,(float)y*SMALL_BLOCK_SIZE);
 
                 }
             }
@@ -62,17 +54,20 @@ void CWorld::tick()
     m_pPlayer->tick();
 }
 
-void CWorld::CalculateNextPos(sf::Vector2f &velocity, sf::RectangleShape &body)
+void CWorld::CalculateNextPos(
+sf::Vector2f &velocity,
+sf::Vector2f &pos,
+Ginfo::Entity::Type type)
 {
     typedef sf::Vector2f v2f;
     CCell *pCell;
-    v2f calpos = body.getPosition();//keep the player's position for calculation
+    v2f calpos = pos;//keep the player's position for calculation
     v2f calvel = velocity;//keep the player's velocity for calculation
     v2f recPoints[4] = {//four points of the rectangular body
         v2f(calpos.x, calpos.y),//top left point
-        v2f(calpos.x + body.getSize().x, calpos.y),//top right point
-        v2f(calpos.x, calpos.y  + body.getSize().y),//bottom left point
-        v2f(calpos.x  + body.getSize().x, calpos.y  + body.getSize().y)//bottom right point
+        v2f(calpos.x + PLAYER_SIZE, calpos.y),//top right point
+        v2f(calpos.x, calpos.y  + PLAYER_SIZE),//bottom left point
+        v2f(calpos.x  + PLAYER_SIZE, calpos.y  + PLAYER_SIZE)//bottom right point
     };
     for (int i = 0; i < 4; i++)
     {
@@ -93,5 +88,5 @@ void CWorld::CalculateNextPos(sf::Vector2f &velocity, sf::RectangleShape &body)
     }
     velocity = calvel;
     gm::v2v2scaleref(velocity, pworld->m_airFriction);
-    body.setPosition(gm::v2add(body.getPosition(), velocity));
+    gm::v2addref(pos, calvel);
 }

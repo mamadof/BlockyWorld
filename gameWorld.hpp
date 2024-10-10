@@ -2,8 +2,7 @@
 #define GAMEWORLD_HPP
 #include <SFML/Graphics.hpp>
 #include "share.hpp"
-
-using gt::block::Block_Type;
+#include "info.hpp"
 
 /*small blocks ingredients:
 electron, neutron, proton*/
@@ -15,15 +14,14 @@ typedef struct{
 
 class CEntity{
     public:
-    unsigned long m_UID;//unique ID
-    sf::RectangleShape m_body;
+    sf::Vector2f m_pos;
 };
 
 class CSmallBlock : public CEntity{
     public:
     bool m_deleted;
     CSmallBlock();
-    gt::block::Block_Type m_type;//small blocks can't have mixed type
+    Ginfo::Block::Type m_type;//small blocks can't have mixed type
     Particles m_particles;
     unsigned m_HP;
     unsigned m_maxHP;
@@ -34,7 +32,7 @@ class CSmallBlock : public CEntity{
 class CBlock : public CEntity{
     public:
     bool m_deleted;
-    Block_Type m_type;
+    Ginfo::Block::Type m_type;
     CSmallBlock ma_SmallBlocks[BLOCK_SUBDIVISION][BLOCK_SUBDIVISION];
     unsigned m_HP;
     unsigned m_maxHP;
@@ -58,8 +56,8 @@ class CPlayer : public CEntity{
 class CCell{
 
     public:
+    sf::Vector2f m_pos;
     CCell();
-    sf::RectangleShape m_body;//rectangular body
     CBlock m_BlockContent;
     void tick();
     private:
@@ -85,8 +83,8 @@ class CWorld{
     CCell* getCell(sf::Vector2f &pos);
     CCell* getCell(sf::Vector2f pos);
     CCell* getCell(int x, int y);
-    CBlock* createBlock(int x, int y, Block_Type type, bool force = false);
-    CSmallBlock* createSmallBlock(int x, int y, Block_Type type, bool force = false);
+    CBlock* createBlock(int x, int y, Ginfo::Block::Type type, bool force = false);
+    CSmallBlock* createSmallBlock(int x, int y, Ginfo::Block::Type type, bool force = false);
     bool distroyBlock(int x, int y);
     bool distroySmallBlock(int x, int y);
     //get pointer to player
@@ -94,7 +92,10 @@ class CWorld{
     //don't use this
     void setPlayer(CPlayer* pplayer);
     //calculate player's next move
-    void CalculateNextPos(sf::Vector2f &velocity, sf::RectangleShape &body);
+    void CalculateNextPos(
+    sf::Vector2f &velocity,
+    sf::Vector2f &pos,
+    Ginfo::Entity::Type type);
 
     private:
     CPlayer* m_pPlayer;

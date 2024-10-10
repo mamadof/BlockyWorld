@@ -1,2 +1,4 @@
 out
-todo.txt
+*.a
+*.o
+*.ini
