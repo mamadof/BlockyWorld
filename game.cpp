@@ -15,7 +15,6 @@ CGame *pgame;
 CWorld *pworld;
 CPlayer *pplayer;
 sf::RenderWindow sf_window;
-sf::Event sf_event;
 static char buff[100];
 static sf::Clock frameClock;
 sf::RectangleShape blockShadow;
@@ -25,31 +24,9 @@ float tempf = 0;
 void CGame::run()
 {
     init();
-    ImGui::SFML::Init(sf_window);
-    while(sf_window.isOpen())
+    while (sf_window.isOpen() && !isKeyPressed(Input::QUIT))
     {
-        while(sf_window.pollEvent(sf_event))
-        {
-            ImGui::SFML::ProcessEvent(sf_window, sf_event);
-            if(sf_event.type == sf::Event::Closed)
-            {
-                ImGui::SFML::Shutdown();
-                close();
-            }
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Q))
-        {
-            close();
-        }
-        // ImGui::SFML::Update(sf_window, frameClock.getElapsedTime());
-        // ImGui::ShowDemoWindow();
-        // ImGui::Begin("Hello, world!");
-        // ImGui::Button("Look at this pretty button",ImVec2(10,10));
-        // if (!ImGui::IsWindowHovered())
-        // {
-            Input::handleInput();
-        // }
-        // ImGui::End();
+        handleInput();
         tick();
         pworld->tick();
         render();
@@ -72,17 +49,20 @@ void CGame::init()
     m_debugText.setPosition(0,0);
     m_debugText.setFillColor(sf::Color::Black);
     //set the world pointer
-    pworld = new CWorld(10,10);
+    pworld = new CWorld(100,100);
     //set default game key bindings
-    Input::setKeyBind(Input::GameKeys::JUMP, sf::Keyboard::Scancode::Space);
-    Input::setKeyBind(Input::GameKeys::A, sf::Keyboard::Scancode::A);
-    Input::setKeyBind(Input::GameKeys::D, sf::Keyboard::Scancode::D);
-    Input::setKeyBind(Input::GameKeys::W, sf::Keyboard::Scancode::W);
-    Input::setKeyBind(Input::GameKeys::S, sf::Keyboard::Scancode::S);
-    Input::setKeyBind(Input::GameKeys::ZOOM_IN, sf::Keyboard::Scancode::Equal);
-    Input::setKeyBind(Input::GameKeys::ZOOM_OUT, sf::Keyboard::Scancode::Hyphen);
-    Input::setKeyBind(Input::GameKeys::LMB, sf::Mouse::Left, true);
-    Input::setKeyBind(Input::GameKeys::RMB, sf::Mouse::Right, true);
+    setKeyBind(Input::GameKeys::QUIT, sf::Keyboard::Scancode::Q, Input::KEYBOARD);
+    setKeyBind(Input::GameKeys::JUMP, sf::Keyboard::Scancode::Space, Input::KEYBOARD);
+    setKeyBind(Input::GameKeys::A, sf::Keyboard::Scancode::A, Input::KEYBOARD);
+    setKeyBind(Input::GameKeys::D, sf::Keyboard::Scancode::D, Input::KEYBOARD);
+    setKeyBind(Input::GameKeys::W, sf::Keyboard::Scancode::W, Input::KEYBOARD);
+    setKeyBind(Input::GameKeys::S, sf::Keyboard::Scancode::S, Input::KEYBOARD);
+    setKeyBind(Input::GameKeys::ZOOM_IN, sf::Keyboard::Scancode::Equal, Input::KEYBOARD);
+    setKeyBind(Input::GameKeys::ZOOM_OUT, sf::Keyboard::Scancode::Hyphen, Input::KEYBOARD);
+    setKeyBind(Input::GameKeys::LMB, sf::Mouse::Left, Input::MOUSE);
+    setKeyBind(Input::GameKeys::RMB, sf::Mouse::Right, Input::MOUSE);
+    setKeyBind(Input::GameKeys::TOOLBAR_NEXT, Input::SCROLL_UP, Input::MOUSE_WHEEL);
+    setKeyBind(Input::GameKeys::TOOLBAR_PREV, Input::SCROLL_DOWN, Input::MOUSE_WHEEL);
     //create player
     pplayer = new CPlayer();
     pworld->setPlayer(pplayer);
@@ -101,10 +81,10 @@ void CGame::init()
     //make a platform for testing
     for (int x = 0; x < 50; x++)
     {
-        pworld->createBlock(x*GRID_SIZE, 6*GRID_SIZE, Ginfo::Block::GLASS);
-        pworld->createBlock(x*GRID_SIZE, 7*GRID_SIZE, Ginfo::Block::GLASS);
-        pworld->createBlock(x*GRID_SIZE, 8*GRID_SIZE, Ginfo::Block::GLASS);
-        pworld->createBlock(x*GRID_SIZE, 9*GRID_SIZE, Ginfo::Block::GLASS);
+        pworld->createBlock(x*GRID_SIZE, 6*GRID_SIZE, Ginfo::Block::DIRT);
+        pworld->createBlock(x*GRID_SIZE, 7*GRID_SIZE, Ginfo::Block::DIRT);
+        pworld->createBlock(x*GRID_SIZE, 8*GRID_SIZE, Ginfo::Block::DIRT);
+        pworld->createBlock(x*GRID_SIZE, 9*GRID_SIZE, Ginfo::Block::DIRT);
     }
 }
 
@@ -142,42 +122,54 @@ void CGame::render()
         for (int y = 0; y < pworld->m_height; y++)
         {
             pCell = pworld->getCell(x*GRID_SIZE, y*GRID_SIZE);
-            // sf_window.draw(pCell->m_body);
             CBlock *pblock = &pCell->m_BlockContent;
-            if (pblock->m_deleted)continue;
-            sf_window.draw(
-            getSprite(Ginfo::Entity::BLOCK, pblock->m_pos, pblock->m_type));
-            //show small blocks if block type is mixed
-            if(pblock->m_type == Ginfo::Block::MIXED)
+            if (!pblock->m_deleted)
             {
-                CSmallBlock *pSmallBlock;
-                for (int x = 0; x < BLOCK_SUBDIVISION; x++)
+                sf_window.draw(
+                getSprite(Ginfo::Entity::BLOCK, pblock->m_pos, pblock->m_type));
+                //show small blocks if block type is mixed
+                if(pblock->m_type == Ginfo::Block::MIXED)
                 {
-                    for (int y = 0; y < BLOCK_SUBDIVISION; y++)
+                    CSmallBlock *pSmallBlock;
+                    for (int x = 0; x < BLOCK_SUBDIVISION; x++)
                     {
-                        pSmallBlock = &pblock->ma_SmallBlocks[x][y];
-                        if (pSmallBlock->m_deleted)continue;
-                        sf_window.draw(getSprite(
-                        Ginfo::Entity::SMALL_BLOCK,
-                        pSmallBlock->m_pos,
-                        pSmallBlock->m_type));
+                        for (int y = 0; y < BLOCK_SUBDIVISION; y++)
+                        {
+                            pSmallBlock = &pblock->ma_SmallBlocks[x][y];
+                            if (pSmallBlock->m_deleted)continue;
+                            sf_window.draw(getSprite(
+                            Ginfo::Entity::SMALL_BLOCK,
+                            pSmallBlock->m_pos,
+                            pSmallBlock->m_type));
+                        }
                     }
+                }
+            }
+            if (pCell->m_DropItems.size() > 0)
+            {
+                for (int x = 0; x < pCell->m_DropItems.size(); x++)
+                {
+                    sf_window.draw(getSprite(
+                    Ginfo::Entity::DROP_ITEM,
+                    pCell->m_DropItems.at(x).m_pos,
+                    pCell->m_DropItems.at(x).m_typeID,
+                    pCell->m_DropItems.at(x).m_type));
                 }
             }
         }
     }
     //block shadow
-    sf_window.draw(blockShadow);
+    // sf_window.draw(blockShadow);
+    sf_window.draw(getSprite(
+    pplayer->m_rightHand.m_itemType,
+    sf::Vector2f(gm::snapToGrid((sf::Vector2f(m_mousePosWorld)))),
+    Ginfo::Block::Type(pplayer->m_rightHand.m_itemID)));
     //debuging stuff
     sf_window.draw(m_debugText);
-    //imgui stuff
-    //draw cells
-    // ImGui::SFML::Render(sf_window);
     sf_window.display();
 }
 
 void CGame::close()
 {
-    // ImGui::SFML::Shutdown();
     sf_window.close();
 }

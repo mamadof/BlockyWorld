@@ -2,6 +2,7 @@
 #include "gameWorld.hpp"
 #include "game.hpp"
 #include "math.hpp"
+#include <cstdlib>
 
 CCell* CWorld::getCellInArray(int x, int y)
 {
@@ -70,10 +71,14 @@ CSmallBlock* CWorld::createSmallBlock(int x, int y, Ginfo::Block::Type type, boo
 
 bool CWorld::distroyBlock(int x, int y)
 {
+    long type;
+    sf::Vector2f dropPos;
     CCell* pCell = getCell(x,y);
     if (pCell == NULL)return false;
     if (pCell->m_BlockContent.m_deleted)return false;
     CBlock* pBlock = &pCell->m_BlockContent;
+    type = pBlock->m_type;
+    dropPos = pBlock->m_pos;
     pBlock->m_deleted = true;
     for (int x = 0; x < BLOCK_SUBDIVISION; x++)
     {
@@ -82,6 +87,10 @@ bool CWorld::distroyBlock(int x, int y)
             pBlock->ma_SmallBlocks[x][y].m_deleted = true;
         }
     }
+    createDropItem(
+    sf::Vector2f(dropPos.x + (float)rand()/((float)RAND_MAX/80),dropPos.y + (float)rand()/((float)RAND_MAX/80)),
+    Ginfo::Entity::BLOCK,
+    type);
     return true;
 }
 

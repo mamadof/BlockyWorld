@@ -3,13 +3,24 @@
 #include <SFML/Window.hpp>
 
 namespace Input{
-    enum KeyState{
-        NONE,
+    typedef enum{
+        UP,
         DOWN,
-        PRESSED,
-        RELEASED,
         STATE_COUNT
-    };
+    }KeyState;
+
+    typedef enum{
+        SCROLL_UP = 1,
+        SCROLL_DOWN = -1
+    }MouseScroll;
+
+    typedef enum{
+        KEYBOARD,
+        MOUSE,
+        MOUSE_WHEEL,
+        KEY_TYPE_COUNT
+    }KeyType;
+
     enum GameKeys{
         LMB,//left mouse button
         RMB,//right mouse button
@@ -20,15 +31,21 @@ namespace Input{
         S,
         ZOOM_IN,
         ZOOM_OUT,
-        KEYS_COUNT
+        TOOLBAR_NEXT,
+        TOOLBAR_PREV,
+        QUIT,
+        GAME_KEYS_COUNT
     };
-
-    void handleInput();//don't call this by your own, it's pointless
-    void setKeyBind(GameKeys key, long sf_Scancode, bool isMouse = false);
-    void setGameKeyState(GameKeys key, KeyState state);
-    bool isKeyMouse(GameKeys key);
-    unsigned short getGameKeyState(GameKeys key);
-    long getKeyBind(GameKeys key);
 };
+void handleInput();//don't call this by your own, it's pointless
+void setKeyBind(Input::GameKeys key, long sf_Scancode, Input::KeyType KeyType);
+Input::KeyState &getKeyState(Input::GameKeys key);
+long &getKeyBind(Input::GameKeys key);
+Input::KeyType &getKeyType(Input::GameKeys key);
+bool isKeyPressed(Input::GameKeys key);
+bool isKeyReLeased(Input::GameKeys key);
+bool isKeyDown(Input::GameKeys key);
+static void resetKeyBools();
+void unloadInput();
 
 #endif //INPUT_HPP

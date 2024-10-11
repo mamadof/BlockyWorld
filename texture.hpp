@@ -5,5 +5,6 @@ void loadTextures();
 
 sf::Sprite& getSprite(
 Ginfo::Entity::Type EntityType,
-sf::Vector2f &pos,
-Ginfo::Block::Type BlockType = Ginfo::Block::STONE);
+sf::Vector2f pos,
+long type_ID = 0,
+long DropItemType = Ginfo::Entity::SMALL_BLOCK);

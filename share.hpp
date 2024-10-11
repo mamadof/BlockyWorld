@@ -4,7 +4,6 @@
 #include <SFML/Graphics.hpp>
 
 extern sf::RenderWindow sf_window;
-extern sf::Event sf_event;
 extern class CGame *pgame;
 extern class CWorld *pworld;
 

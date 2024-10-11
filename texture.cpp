@@ -15,15 +15,19 @@ void loadTextures()
 
 sf::Sprite& getSprite(
 Ginfo::Entity::Type EntityType,
-sf::Vector2f &pos,
-Ginfo::Block::Type BlockType)
+sf::Vector2f pos,
+long typeID,
+long DropItemType)
 {
     sprite->setScale(1.f,1.f);
+    sprite->setColor(sf::Color(255,255,255));
     if (EntityType == Ginfo::Entity::BLOCK)
     {
         sprite->setTexture(a_pTextures[BLOCK_TEXTURE]);
-        sprite->setTextureRect(sf::IntRect(BLOCK_SIZE,0,BLOCK_SIZE,BLOCK_SIZE));
-        sprite->setColor(sf::Color(255,255,255));
+        sprite->setTextureRect(sf::IntRect(
+        (typeID * BLOCK_SIZE) % (BLOCK_SIZE * 10),
+        ((typeID * BLOCK_SIZE) / (BLOCK_SIZE * 10)) * BLOCK_SIZE,
+        BLOCK_SIZE,BLOCK_SIZE));
         sprite->setPosition(pos);
         return *sprite;
     }
@@ -31,8 +35,10 @@ Ginfo::Block::Type BlockType)
     if (EntityType == Ginfo::Entity::SMALL_BLOCK)
     {
         sprite->setTexture(a_pTextures[BLOCK_TEXTURE]);
-        sprite->setTextureRect(sf::IntRect(BLOCK_SIZE,0,BLOCK_SIZE,BLOCK_SIZE));
-        sprite->setColor(sf::Color(255,255,255));
+        sprite->setTextureRect(sf::IntRect(
+        (typeID * BLOCK_SIZE) % (BLOCK_SIZE * 10),
+        ((typeID * BLOCK_SIZE) / (BLOCK_SIZE * 10)) * BLOCK_SIZE,
+        BLOCK_SIZE,BLOCK_SIZE));
         sprite->setScale(1/9.f,1/9.f);
         sprite->setPosition(pos);
         return *sprite;
@@ -54,6 +60,15 @@ Ginfo::Block::Type BlockType)
         sprite->setTextureRect(sf::IntRect(0,0,PLAYER_SPRITE_SIZE,PLAYER_SPRITE_SIZE));
         sprite->setOrigin(sf::Vector2f((float)(PLAYER_SPRITE_SIZE-PLAYER_SIZE)/2,
         (float)(PLAYER_SPRITE_SIZE-PLAYER_SIZE)/2));
+        sprite->setPosition(pos);
+        return *sprite;
+    }
+
+    if (EntityType == Ginfo::Entity::DROP_ITEM)
+    {
+        //pos is useless just pass something
+        getSprite(Ginfo::Entity::Type(DropItemType), pos, typeID);
+        sprite->setScale(1/9.f,1/9.f);
         sprite->setPosition(pos);
         return *sprite;
     }

@@ -1,3 +1,5 @@
+#include <map>
+#include <vector>
 #include "gameWorld.hpp"
 #include "share.hpp"
 #include "math.hpp"
@@ -89,4 +91,22 @@ Ginfo::Entity::Type type)
     velocity = calvel;
     gm::v2v2scaleref(velocity, pworld->m_airFriction);
     gm::v2addref(pos, calvel);
+}
+
+void CWorld::createDropItem(
+    sf::Vector2f pos,
+    Ginfo::Entity::Type type,
+    long typeID,
+    unsigned count,
+    sf::Vector2f velocity)
+{
+    CCell *pcell = getCell(pos.x,pos.y);
+    if (pcell == NULL)return;
+
+    CDropItem *pDropItem = new CDropItem;
+    pDropItem->m_type = type;
+    pDropItem->m_typeID = typeID;
+    pDropItem->m_count = count;
+    pDropItem->m_pos = pos;
+    pcell->m_DropItems.push_back(*pDropItem);
 }

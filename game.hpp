@@ -7,6 +7,7 @@
 class CGame{
     public:
     void run();
+    void close();
     sf::Vector2i m_mousePos;
     sf::Vector2i m_mousePosWorld;
     sf::Font m_font;
@@ -19,6 +20,5 @@ class CGame{
     void init();
     void tick();
     void render();
-    void close();
 };
 #endif //GAME_HPP

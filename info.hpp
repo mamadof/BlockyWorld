@@ -12,6 +12,7 @@
 #define GRID_SIZE CELL_SIZE
 #define PLAYER_SIZE 75//player and mob size
 #define PLAYER_SPRITE_SIZE 81//the drawable sprite
+#define DROP_ITEM_SIZE 21
 #define DEFAULT_AIR_FRICTION sf::Vector2f(0.93, 1)
 #define DEFAULT_GROUND_FRICTION sf::Vector2f(0.96, 0.99)
 #define DEFAULT_FPS 60
@@ -20,31 +21,37 @@ namespace Ginfo{//stands for game info
     namespace Entity
     {
         typedef enum{
-        BLOCK,
-        SMALL_BLOCK,
-        PLAYER,
-        MOB,
-        ITEM,
-        TYPE_COUNT
+            BLOCK,
+            SMALL_BLOCK,
+            PLAYER,
+            MOB,
+            ITEM,
+            DROP_ITEM,
+            TYPE_COUNT
         }Type;
     }
     
     namespace Block
     {
         typedef enum{
-        MIXED,
-        DIRT,
-        GRASS,
-        STONE,
-        GLASS,
-        TYPE_COUNT
+            MIXED,
+            DIRT,
+            GRASS,
+            STONE,
+            GLASS,
+            IRON,
+            COPPER,
+            WOOD,
+            LEAF,
+            MILF,
+            TYPE_COUNT
         }Type;
 
         typedef enum{
-        MAXHP,
-        SPRITE_X,
-        SPRITE_Y,
-        INFO_COUNT
+            MAXHP,
+            SPRITE_X,
+            SPRITE_Y,
+            INFO_COUNT
         }Info;
     }  
 
@@ -59,9 +66,9 @@ namespace Ginfo{//stands for game info
     namespace Texture
     {
         enum{
-        BLOCK_TEXTURE,
-        PLAYER_TEXTURE,
-        TEXTURE_COUNT
+            BLOCK_TEXTURE,
+            PLAYER_TEXTURE,
+            TEXTURE_COUNT
         };
     }
 }
