@@ -22,6 +22,7 @@ void handleInput()
     resetKeyBools();
     while (sf_window.pollEvent(sf_event))
     {
+        ImGui::SFML::ProcessEvent(sf_window, sf_event);
         if (sf_event.type == sf::Event::Closed)
         {
             pgame->close();

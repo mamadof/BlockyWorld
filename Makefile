@@ -9,4 +9,4 @@ imgui-a:
 	rm *.o
 
 part:
-	g++ *.cpp imgui.a -o out $(links)
+	g++ *.cpp imgui/imgui_demo.cpp imgui.a -o out $(links)

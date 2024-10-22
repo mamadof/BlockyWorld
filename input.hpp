@@ -25,6 +25,7 @@ namespace Input{
         LMB,//left mouse button
         RMB,//right mouse button
         JUMP,
+        TESTING,
         A,
         D,
         W,
@@ -34,6 +35,8 @@ namespace Input{
         TOOLBAR_NEXT,
         TOOLBAR_PREV,
         QUIT,
+        REGEN_WORLD,
+        PLAYER_INVENTORY,
         GAME_KEYS_COUNT
     };
 };

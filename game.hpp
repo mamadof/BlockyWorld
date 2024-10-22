@@ -15,6 +15,7 @@ class CGame{
     std::string m_debugString;
     sf::View m_renderView;
     int m_fps;
+    float m_deltaTime;
 
     private:
     void init();
